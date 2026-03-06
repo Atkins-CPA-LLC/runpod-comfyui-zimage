@@ -24,3 +24,18 @@ RUN comfy model download \
     --url https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors \
     --relative-path models/vae \
     --filename ae.safetensors
+
+# Install ZiT LoRA Loader (Z-Image needs special loader, standard one silently drops keys)
+RUN cd /comfyui/custom_nodes && \
+    git clone https://github.com/holchan/Comfyui-ZiT-Lora-loader.git && \
+    cd Comfyui-ZiT-Lora-loader && \
+    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+# Download Z-Image LoRAs from CivitAI
+RUN curl -L -H "Authorization: Bearer 8803afcb6bbea90483b630868ca427a5" \
+    -o /comfyui/models/loras/RealisticSnapshot_v5.safetensors \
+    "https://civitai.com/api/download/models/2617751"
+
+RUN curl -L -H "Authorization: Bearer 8803afcb6bbea90483b630868ca427a5" \
+    -o /comfyui/models/loras/TeeKaysTittyTime_AQueensTits_V1-2_ZIT.safetensors \
+    "https://civitai.com/api/download/models/2491378"
